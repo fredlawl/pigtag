@@ -2,24 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TrackObject : MonoBehaviour
+namespace Camera
 {
-    public GameObject objectToTrack;
-
-    // Start is called before the first frame update
-    void Start()
+    public class TrackObject : MonoBehaviour
     {
-        
-    }
+        public GameObject objectToTrack;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+        // Start is called before the first frame update
+        void Start()
+        {
 
-    private void LateUpdate()
-    {
-        transform.position = new Vector3(objectToTrack.transform.position.x, objectToTrack.transform.position.y, transform.position.z); ;
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+
+        }
+
+        private void LateUpdate()
+        {
+            transform.position = new Vector3(objectToTrack.transform.position.x, objectToTrack.transform.position.y, transform.position.z); ;
+        }
     }
 }

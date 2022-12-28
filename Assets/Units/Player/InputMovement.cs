@@ -2,20 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Camera
+namespace Player
 {
-    public class FreeMove : MonoBehaviour
+    public class InputMovement : MonoBehaviour
     {
+        public float speed = 8.0f;
+        private Rigidbody2D rb;
         private Vector2 input;
-        public float speed = 8;
 
-        // Start is called before the first frame update
         void Start()
         {
-
+            rb = gameObject.GetComponent<Rigidbody2D>();
         }
 
-        // Update is called once per frame
         private void Update()
         {
             input = new Vector2()
@@ -27,12 +26,11 @@ namespace Camera
 
         void FixedUpdate()
         {
-            transform.position = new Vector3()
+            rb.MovePosition(new Vector2()
             {
                 x = transform.position.x + (input.x * Time.deltaTime * speed),
-                y = transform.position.y + (input.y * Time.deltaTime * speed),
-                z = transform.position.z
-            };
+                y = transform.position.y + (input.y * Time.deltaTime * speed)
+            });
         }
     }
 }

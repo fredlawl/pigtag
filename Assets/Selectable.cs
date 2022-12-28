@@ -7,11 +7,26 @@ public class Selectable : MonoBehaviour, IPointerClickHandler
     private static volatile GameObject currentlySelected = null;
     public UnityEvent<GameObject, SelectedState> onSelected;
     private bool isSelected = false;
+    private SpriteRenderer spriteRender;
+
+    /*
+     * TODO: Figure out how to add a circle or square outline
+     * material shader to the sprite without making it dissapear
+     * :|
+     */
+    //private Shader defaultShader;
+    //private Shader selectedShader;
+
+    private void Start()
+    {
+        spriteRender = GetComponent<SpriteRenderer>();
+        //selectedShader = Shader.Find("NewUnitShader");
+        //defaultShader = spriteRender.material.shader;
+    }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        Debug.Log("clicked!");
-        if (((int) MouseButton.Primary).Equals(eventData.button))
+        if (PointerEventData.InputButton.Left == eventData.button)
         {
             if (isSelected)
             {
@@ -30,13 +45,15 @@ public class Selectable : MonoBehaviour, IPointerClickHandler
             //onSelected.Invoke(currentlySelected, SelectedState.Deselected);
             currentlySelected = gameObject;
             isSelected = true;
+            //spriteRender.material.shader = selectedShader;
         }
 
-        if (((int) MouseButton.Secondary).Equals(eventData.button) && gameObject.Equals(currentlySelected))
+        if (PointerEventData.InputButton.Right == eventData.button && gameObject.Equals(currentlySelected))
         {
             onSelected.Invoke(gameObject, SelectedState.Deselected);
             currentlySelected = null;
             isSelected = false;
+            //spriteRender.material.shader = defaultShader;
         }
     }
 
