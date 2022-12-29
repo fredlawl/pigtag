@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 3010178217252923093}
   - component: {fileID: 6332965725879632709}
   - component: {fileID: 3939836371031651727}
+  - component: {fileID: 119828645197225188}
   m_Layer: 3
   m_Name: Farm
   m_TagString: Obstructable
@@ -152,13 +153,37 @@ MonoBehaviour:
   isImmune: 0
   onDied:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 119828645197225188}
+        m_TargetAssemblyTypeName: Building.BuildingManager, Assembly-CSharp
+        m_MethodName: OnDied
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onImmunitySet:
     m_PersistentCalls:
       m_Calls: []
   onDamaged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 119828645197225188}
+        m_TargetAssemblyTypeName: Building.BuildingManager, Assembly-CSharp
+        m_MethodName: OnDamaged
+        m_Mode: 4
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &6332965725879632709
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -196,5 +221,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fad4d841e6b07a54983a4c80382fc802, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &119828645197225188
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7899935520061530147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc9cf55b1d2957845ab6235a8a63d6d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

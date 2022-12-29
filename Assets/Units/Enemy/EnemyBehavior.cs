@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Enemy
 {
-    public class EnemyBehaviorTree : BehaviorTree.Tree
+    public class EnemyBehavior : BehaviorTree.Tree
     {
         public float movementSpeed = 10f;
         public AttackStats attackStats;
@@ -25,6 +25,23 @@ namespace Enemy
                 }),
                 new DummyPatrol()
             });
+        }
+
+        public void OnDied()
+        {
+            Debug.Log($"{gameObject.name} died!");
+            Destroy(gameObject);
+        }
+
+        public void OnDamaged(float amount)
+        {
+            /*
+             * TODO: There's a bug here
+             * For w/e reason, this is given the value
+             * passed in via the UI instead of from the 
+             * .Invoke() :thinkingface:
+             */
+            Debug.Log($"{gameObject.name} damaged for {amount}!");
         }
     }
 }

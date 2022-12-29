@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2375556534165594748}
   - component: {fileID: 6513790768319013355}
   - component: {fileID: 2513838422335884189}
+  - component: {fileID: 2919239595770988183}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -150,3 +151,51 @@ MonoBehaviour:
   attackStats:
     baseDamage: 50
     attacksPerSecond: 1
+    attackRange: 1.67
+--- !u!114 &2919239595770988183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7623642486117208602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 149660c20ca5d51488c958cecf77bfe6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 100
+  isImmune: 0
+  onDied:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2513838422335884189}
+        m_TargetAssemblyTypeName: Enemy.EnemyBehavior, Assembly-CSharp
+        m_MethodName: OnDied
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onImmunitySet:
+    m_PersistentCalls:
+      m_Calls: []
+  onDamaged:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2513838422335884189}
+        m_TargetAssemblyTypeName: Enemy.EnemyBehavior, Assembly-CSharp
+        m_MethodName: OnDamaged
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2

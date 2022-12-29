@@ -29,7 +29,7 @@ public class Health : MonoBehaviour
 
         if (IsDead())
         {
-            onDied.Invoke();
+            onDied?.Invoke();
         }
 
         return result;
@@ -41,7 +41,7 @@ public class Health : MonoBehaviour
 
         if (IsDead())
         {
-            onDied.Invoke();
+            onDied?.Invoke();
         }
     }
 
@@ -49,23 +49,36 @@ public class Health : MonoBehaviour
     {
         if (isImmune)
         {
-            onDamaged.Invoke(0);
+            onDamaged?.Invoke(0);
             return;
         }
 
         health -= amount;
-        onDamaged.Invoke(amount);
+        onDamaged?.Invoke(amount);
     }
 
     public void SetImmunity(bool immune)
     {
         isImmune = immune;
-        onImmunitySet.Invoke();
+        onImmunitySet?.Invoke();
     }
 
     public void ToggleImmunity()
     {
         SetImmunity(!isImmune);
+    }
+
+    public void Kill()
+    {
+        /*
+         * TODO: Handle overflow problem
+         * Astute programmers may notice that
+         * we're using a float type. What if
+         * health is set to MAX_FLOAT and we
+         * add one to it? It overflows!
+         */
+        ConsumeDamage(health + 1);
+        onDied?.Invoke();
     }
 
     public bool IsImmune() => isImmune;
