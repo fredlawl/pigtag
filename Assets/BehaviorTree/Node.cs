@@ -72,8 +72,7 @@ namespace BehaviorTree
         {
             if (stateStore.ContainsKey(key))
             {
-                stateStore.Remove(key);
-                return true;
+                return stateStore.Remove(key);
             }
 
             Node node = parent;

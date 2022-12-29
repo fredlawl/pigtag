@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 3010178217252923093}
   - component: {fileID: 6332965725879632709}
   - component: {fileID: 3939836371031651727}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Farm
   m_TagString: Obstructable
   m_Icon: {fileID: 0}
@@ -150,7 +150,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 100
   isImmune: 0
-  onNoHealth:
+  onDied:
     m_PersistentCalls:
       m_Calls: []
   onImmunitySet:

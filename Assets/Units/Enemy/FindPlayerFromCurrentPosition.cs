@@ -22,11 +22,40 @@ namespace Enemy
                 {
                     x = 600,
                     y = 600
-                }, 45);
+                }, 45, Layers.PlayerLayerMask);
 
                 if (colliders.Length > 0)
                 {
-                    GetRootNode().SetData("target", colliders[0].transform);
+                    Collider2D picked = null;
+
+
+                    /*
+                     * TODO: Add logic to only fetch player
+                     * Then we can have a separate behavior tree
+                     * for the case the player is unreachable because
+                     * player is hiding behind their buildings
+                     */
+                    foreach (Collider2D collider in colliders)
+                    {
+                        // TODO: Remove this hack
+                        if ("Player".Equals(collider.gameObject.name))
+                        {
+                            picked = collider;
+                            break;
+                        }
+
+                        if (!collider.GetComponent<Health>().IsImmune())
+                        {
+                            picked = collider;
+                        }
+                    }
+
+                    if (picked == null)
+                    {
+                        return State.Failure;
+                    }
+
+                    GetRootNode().SetData("target", picked.transform);
                     return State.Success;
                 }
 

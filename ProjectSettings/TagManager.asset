@@ -11,7 +11,7 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player
   - Water
   - UI
   - Background
@@ -46,6 +46,9 @@ TagManager:
     locked: 0
   - name: Sprites
     uniqueID: 1312355515
+    locked: 0
+  - name: Player
+    uniqueID: 560903121
     locked: 0
   - name: Default
     uniqueID: 0

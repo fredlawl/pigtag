@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,11 +11,41 @@ public class Health : MonoBehaviour
     [SerializeField]
     private bool isImmune = false;
 
-    public UnityEvent onNoHealth;
+    public UnityEvent onDied;
     public UnityEvent onImmunitySet;
     public UnityEvent<float> onDamaged;
 
+    /**
+     * This takes a callback because there can be
+     * a race that if a caller destroys the game object
+     * in onDied() event, then any cleanup after damage
+     * applied wont work because of a bad refference.
+     */
+    public TResult TakeDamage<TResult>(float amount, Func<TResult> callback)
+    {
+        ConsumeDamage(amount);
+
+        TResult result = callback();
+
+        if (IsDead())
+        {
+            onDied.Invoke();
+        }
+
+        return result;
+    }
+
     public void TakeDamage(float amount)
+    {
+        ConsumeDamage(amount);
+
+        if (IsDead())
+        {
+            onDied.Invoke();
+        }
+    }
+
+    private void ConsumeDamage(float amount)
     {
         if (isImmune)
         {
@@ -24,11 +55,6 @@ public class Health : MonoBehaviour
 
         health -= amount;
         onDamaged.Invoke(amount);
-
-        if (health <= 0)
-        {
-            onNoHealth.Invoke();
-        }
     }
 
     public void SetImmunity(bool immune)
@@ -42,8 +68,6 @@ public class Health : MonoBehaviour
         SetImmunity(!isImmune);
     }
 
-    public bool IsImmune()
-    {
-        return isImmune;
-    }
+    public bool IsImmune() => isImmune;
+    public bool IsDead() => health <= 0 && !isImmune;
 }

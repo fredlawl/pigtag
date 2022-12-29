@@ -147,3 +147,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 7
+  attackStats:
+    baseDamage: 50
+    attacksPerSecond: 1

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Camera
+namespace GameCamera
 {
     public class TrackObject : MonoBehaviour
     {
@@ -22,6 +22,11 @@ namespace Camera
 
         private void LateUpdate()
         {
+            if (objectToTrack == null)
+            {
+                return;
+            }
+
             transform.position = new Vector3(objectToTrack.transform.position.x, objectToTrack.transform.position.y, transform.position.z); ;
         }
     }

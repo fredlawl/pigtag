@@ -23,6 +23,15 @@ namespace Enemy
                 return State.Failure;
             }
 
+            /*
+             * TODO: Fix the distance calculation
+             * The distance is from center of object to center of other object.
+             * The problem is the enemy and house are both too big to hit
+             * eachother because the distance doesn't take hitbox into
+             * account :|
+             * 
+             * Or adjust attack range?
+             */
             float distanceToTarget = Vector2.Distance(transform.position, ((Transform)target).position);
             if (distanceToTarget <= attackRange)
             {

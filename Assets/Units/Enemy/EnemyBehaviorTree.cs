@@ -8,14 +8,15 @@ namespace Enemy
     public class EnemyBehaviorTree : BehaviorTree.Tree
     {
         public float movementSpeed = 10f;
+        public AttackStats attackStats;
 
         protected override Node SetupTree()
         {
             return new Selector(new List<Node>() {
                 new Sequence(new List<Node>()
                 {
-                    new CheckEnemyInAttackRange(1f, transform),
-                    new EnemyAttack()
+                    new CheckEnemyInAttackRange(attackStats.AttackRange, transform),
+                    new EnemyAttack(attackStats)
                 }),
                 new Sequence(new List<Node>()
                 {
