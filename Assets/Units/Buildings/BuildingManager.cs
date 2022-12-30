@@ -20,7 +20,7 @@ namespace Building
         public void OnDied()
         {
             Debug.Log($"{gameObject.name} died!");
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 }

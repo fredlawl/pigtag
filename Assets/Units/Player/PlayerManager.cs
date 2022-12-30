@@ -6,6 +6,11 @@ namespace Player
 {
     public class PlayerManager : MonoBehaviour
     {
+        
+        public void Awake()
+        {
+        }
+
         public void OnDamaged(float amount)
         {
             /*
@@ -20,7 +25,7 @@ namespace Player
         public void OnDied()
         {
             Debug.Log($"{gameObject.name} died!");
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 }

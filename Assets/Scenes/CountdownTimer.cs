@@ -11,8 +11,8 @@ public class CountdownTimer : MonoBehaviour
     public static readonly string DURATION_30_MINUTES = "PT30M";
     public static readonly string TIMESPAN_30_MINUTES = "00:30:00";
 
-    public GameObject countdownObject;
-    private TMPro.TextMeshProUGUI countdownObjectText;
+    [SerializeField]
+    private TMPro.TextMeshProUGUI display;
 
     /*
      * RFC 3339 "Appendix A. ISO 8601 Collected ABNF" durations
@@ -34,13 +34,10 @@ public class CountdownTimer : MonoBehaviour
     public UnityEvent onFinished;
     public UnityEvent<float> onTick;
 
+    public TimeSpan StartTime => span;
+
     private void Awake()
     {
-        if (countdownObject)
-        {
-            countdownObjectText = countdownObject.GetComponent<TMPro.TextMeshProUGUI>();
-        }
-
         Stop();
     }
 
@@ -89,9 +86,6 @@ public class CountdownTimer : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (countdownObjectText)
-        {
-            countdownObjectText.text = new TimeSpan(0, 0, (int)secondsRemaining).ToString();
-        }
+        display.text = new TimeSpan(0, 0, (int)secondsRemaining).ToString();
     }
 }

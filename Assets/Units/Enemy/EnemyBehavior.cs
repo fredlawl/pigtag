@@ -21,7 +21,7 @@ namespace Enemy
                 new Sequence(new List<Node>()
                 {
                     new FindPlayerFromCurrentPosition(transform),
-                    new DashToTarget(movementSpeed, GetComponent<Rigidbody2D>(), transform)
+                    new DashToTarget(movementSpeed, GetComponent<Rigidbody2D>(), transform),
                 }),
                 new DummyPatrol()
             });
@@ -30,7 +30,7 @@ namespace Enemy
         public void OnDied()
         {
             Debug.Log($"{gameObject.name} died!");
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
 
         public void OnDamaged(float amount)
