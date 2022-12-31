@@ -1,11 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 namespace Player
 {
     public class PlayerManager : MonoBehaviour
     {
+
+        public UnityEvent onDied;
         
         public void Awake()
         {
@@ -26,6 +30,7 @@ namespace Player
         {
             Debug.Log($"{gameObject.name} died!");
             gameObject.SetActive(false);
+            onDied?.Invoke();
         }
     }
 }

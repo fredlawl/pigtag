@@ -22,7 +22,7 @@ namespace Enemy
                 {
                     x = 600,
                     y = 600
-                }, 45, Layers.PlayerLayerMask);
+                }, 45, Layers.PlayerMask);
 
                 if (colliders.Length > 0)
                 {

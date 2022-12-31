@@ -5,16 +5,16 @@ using UnityEngine;
 public class PlayableBoundary : MonoBehaviour
 {
     public Bounds boundary;
-    private BoxCollider2D collider;
+    private BoxCollider2D boxCollider;
 
     void Start()
     {
-        collider = GetComponent<BoxCollider2D>();
+        boxCollider = GetComponent<BoxCollider2D>();
     }
 
     void Update()
     {
-        if (collider == null)
+        if (boxCollider == null)
         {
             return;
         }

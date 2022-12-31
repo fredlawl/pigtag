@@ -36,6 +36,7 @@ public class GameManager : MonoBehaviour
     {
         player = playerSpawner.Spawn();
         player.GetComponent<PlayableBoundary>().boundary = map.localBounds;
+        player.GetComponent<Player.PlayerManager>().onDied.AddListener(OnPlayerDied);
         trackableCamera.objectToTrack = player;
     }
 
@@ -88,13 +89,16 @@ public class GameManager : MonoBehaviour
 
     private void OnCountdownTimerFinished()
     {
-        Debug.Log("Game over!");
         foreach (GameObject enemy in enemies)
         {
             enemy.GetComponent<Health>()?.Kill();
         }
 
-        SceneManager.LoadScene("GameOver");
-        SceneManager.UnloadSceneAsync("Game");
+        SceneManager.LoadScene("GameOverWin");
+    }
+
+    private void OnPlayerDied()
+    {
+        SceneManager.LoadScene("GameOverLoose");
     }
 }

@@ -17,7 +17,7 @@ namespace Enemy
             this.attackStats = attackStats;
         }
 
-        public override State Evaluate()
+        public override BehaviorTree.Node.State Evaluate()
         {
             Transform target = (Transform)GetData("target");
             if (target != lastTarget)
@@ -39,11 +39,11 @@ namespace Enemy
                         attackCounter = 0f;
                     }
 
-                    return State.Running;
+                    return BehaviorTree.Node.State.Running;
                 });
             }
 
-            return State.Running;
+            return BehaviorTree.Node.State.Running;
         }
     }
 }
