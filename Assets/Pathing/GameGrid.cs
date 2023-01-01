@@ -6,28 +6,18 @@ using System;
 
 namespace Pathing
 {
-    [RequireComponent(typeof(Tilemap))]
-    public class GameGrid : MonoBehaviour
+    public class GameGrid
     {
         private Tilemap tilemap;
+        private List<Node> grid = new List<Node>();
+        public Vector2Int size => new Vector2Int(tilemap.size.x, tilemap.size.y);
 
-        public List<Node> Grid { get; private set; }
+        private GameGrid() { }
 
-        public Bounds Bounds => tilemap.localBounds;
-
-        /**
-         * Do not have this enabled while drawing
-         * on the tilemap. Exception out of bound
-         * errors go wild! Also, do not forget to
-         * compress the tile map!
-         */
-        [SerializeField]
-        private bool enableDebugging = false;
-
-        private void Start()
+        public GameGrid(Tilemap map)
         {
-            tilemap = GetComponent<Tilemap>();
-            Grid = new List<Node>(tilemap.size.x * tilemap.size.y);
+            tilemap = map;
+            grid = new List<Node>(tilemap.size.x * tilemap.size.y);
 
             // Populate grid
             for (int y = 0; y < tilemap.size.y; y++)
@@ -36,65 +26,89 @@ namespace Pathing
                 {
                     Node n = new Node(new Vector3()
                     {
-                        x = x + (tilemap.localBounds.center.x - tilemap.size.x * tilemap.tileAnchor.x) + (tilemap.cellSize.x / 2),
-                        y = y + (tilemap.localBounds.center.y - tilemap.size.y * tilemap.tileAnchor.y) + (tilemap.cellSize.y / 2),
-                    }, 0, 0);
+                        x = x + (tilemap.localBounds.center.x - tilemap.size.x * tilemap.tileAnchor.x) + (tilemap.cellSize.x * tilemap.tileAnchor.x),
+                        y = y + (tilemap.localBounds.center.y - tilemap.size.y * tilemap.tileAnchor.y) + (tilemap.cellSize.y * tilemap.tileAnchor.y),
+                    }, new Vector3(x, y));
 
-                    Grid.Add(n);
+                    grid.Add(n);
                 }
             }
         }
 
-        private void Update()
+        public Node GetNodeFromWorldPosition(Vector3 position)
         {
-            LocateObstructables();
+            var pos = MapPositionToGridCell(position);
+            return Cell(pos);
         }
 
-        private void LocateObstructables()
+        public Node GetNodeFromGridPosition(Vector3 position)
+        {
+            return Cell(position);
+        }
+
+        private Vector3 MapPositionToGridCell(Vector3 position)
+        {
+            return new Vector3()
+            {
+                x = position.x - (tilemap.localBounds.center.x - tilemap.size.x * tilemap.tileAnchor.x) + (tilemap.cellSize.x * tilemap.tileAnchor.x) - tilemap.tileAnchor.x,
+                y = position.y - (tilemap.localBounds.center.y - tilemap.size.y * tilemap.tileAnchor.y) + (tilemap.cellSize.y * tilemap.tileAnchor.y) - tilemap.tileAnchor.y,
+            };
+        }
+
+        public void MarkObstructables()
         {
             for (int y = 0; y < tilemap.size.y; y++)
             {
                 for (int x = 0; x < tilemap.size.x; x++)
                 {
-                    Node n = Grid[y * tilemap.size.x + x];
-                    Collider2D collision = Physics2D.OverlapBox(n.Position, tilemap.cellSize, 45, Layers.Collidables);
-                    n.Obstructed = collision != null;
+                    Node n = Cell(x, y);
+                    AddObstruction(n);
                 }
             }
         }
 
-        private void OnValidate()
+        public void AddObstruction(Vector3 location)
         {
-            Start();
+            Node n = Cell(location);
+            if (n != null)
+            {
+                AddObstruction(n);
+            }
         }
 
-        private void OnDrawGizmos()
+        public void AddObstruction(Node n)
         {
-            if (!enableDebugging)
-            {
-                return;
-            }   
+            Collider2D collision = Physics2D.OverlapBox(n.mapWorldPosition, tilemap.cellSize / 2, 0, Layers.Collidables);
+            n.isObstructed = collision != null;
+            //test 
+        }
 
-            if (tilemap == null || Grid.Count <= 0)
+        public Vector3 cellSize => tilemap.cellSize;
+
+        public Node Cell(int x, int y)
+        {
+            return Cell(new Vector2Int(x, y));
+        }
+
+        public Node Cell(Vector3 position)
+        {
+            return Cell(new Vector2Int((int)position.x, (int)position.y));
+        }
+
+        public Node Cell(Vector3Int position)
+        {
+            return Cell(new Vector2Int(position.x, position.y));
+        }
+
+        public Node Cell(Vector2Int position)
+        {
+            var index = position.y * tilemap.size.x + position.x;
+            if (index < 0 || index >= grid.Count)
             {
-                return;
+                return null;
             }
 
-            LocateObstructables();
-
-            for (int y = 0; y < tilemap.size.y; y++)
-            {
-                for (int x = 0; x < tilemap.size.x; x++)
-                {
-                    Node n = Grid[y * tilemap.size.x + x];
-                    Gizmos.DrawWireCube(n.Position, tilemap.cellSize);
-
-                    if (n.Obstructed)
-                    {
-                        Gizmos.DrawCube(n.Position, tilemap.cellSize);
-                    }
-                }
-            }
+            return grid[index];
         }
     }
 }

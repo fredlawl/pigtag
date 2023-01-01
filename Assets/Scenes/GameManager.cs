@@ -1,3 +1,4 @@
+using Enemy;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -25,19 +26,28 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]
     private Tilemap map;
+    private Pathing.GameGrid gameGrid;
+    private Pathing.Pathfinder pathfinder;
 
     private void Awake()
     {
         countdownTimer.onTick.AddListener(OnCountdownTimerTick);
         countdownTimer.onFinished.AddListener(OnCountdownTimerFinished);
+
+        gameGrid = new Pathing.GameGrid(map);
+        gameGrid.MarkObstructables();
+        pathfinder = new Pathing.Pathfinder(gameGrid);
     }
 
     private void Start()
     {
-        player = playerSpawner.Spawn();
-        player.GetComponent<PlayableBoundary>().boundary = map.localBounds;
+        player = playerSpawner.SpawnInactive();
+        PlayableBoundary playerPlayableBoundary = player.AddComponent<PlayableBoundary>();
+        playerPlayableBoundary.boundary = map.localBounds;
         player.GetComponent<Player.PlayerManager>().onDied.AddListener(OnPlayerDied);
         trackableCamera.objectToTrack = player;
+        player.name = "Player";
+        player.SetActive(true);
     }
 
     private void Update()
@@ -79,11 +89,19 @@ public class GameManager : MonoBehaviour
     {
         // On or after 10 seconds spawn an enemy
         double timeElapsed = countdownTimer.StartTime.TotalSeconds - secondsRemaining;
-        if (timeElapsed >= 10 && enemies.Count == 0)
+        if (timeElapsed >= 1 && enemies.Count == 0)
         {
-            GameObject obj = enemySpawner.Spawn();
-            obj.GetComponent<PlayableBoundary>().boundary = map.localBounds;
+            /*
+             * there's a bug here that if the instantiation fails, then 
+             * we'll spawn infinitely.
+             */
+            GameObject obj = enemySpawner.SpawnInactive();
             enemies.Add(obj);
+
+            Pathing.Pather p = obj.AddComponent<Pathing.Pather>();
+            p.pathfinder = pathfinder;
+
+            obj.SetActive(true);
         }
     }
 

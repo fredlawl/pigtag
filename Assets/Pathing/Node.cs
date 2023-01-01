@@ -4,33 +4,79 @@ using UnityEngine;
 
 namespace Pathing
 {
-    public class Node
+    public class Node : IEqualityComparer<Node>, IEqualityComparer
     {
-        public float GCost { get; set; }
-        public float HCost { get; set; }
+        public float gScore { get; set; }
+        public float hScore { get; set; }
 
-        public float FCost => GCost + HCost;
+        public float fScore => gScore + hScore;
 
-        public bool Obstructed { get; set; }
-        public Vector3 Position { get; private set; }
+        public bool isObstructed { get; set; }
+        public Vector3 mapWorldPosition { get; private set; }
+        public Vector3 gridPosition { get; private set; }
 
-        public Node Parent { get; set; }
+        public Node parent { get; set; }
 
         private Node() { }
 
-        public Node(Vector3 position, float gCost, float hCost)
+        public Node(Vector3 worldPosition, Vector3 gridPosition)
         {
-            Position = position;
-            GCost = gCost;
-            HCost = hCost;
+            this.mapWorldPosition = worldPosition;
+            this.gridPosition = gridPosition;
+            gScore = float.PositiveInfinity;
+            hScore = 0;
         }
 
-        public Node(Vector3 position, bool obstructed, float gCost, float hCost)
+        public List<Node> Neighbors(GameGrid grid)
         {
-            Position = position;
-            Obstructed = obstructed;
-            GCost = gCost;
-            HCost = hCost;
+            var positions = new List<Vector3>() {
+                //new Vector3(gridPosition.x - 1, gridPosition.y - 1), // top left
+                new Vector3(gridPosition.x, gridPosition.y - 1), // top
+                //new Vector3(gridPosition.x + 1, gridPosition.y - 1), // top right
+                new Vector3(gridPosition.x + 1, gridPosition.y), // right
+                //new Vector3(gridPosition.x + 1, gridPosition.y + 1), // bottom right
+                new Vector3(gridPosition.x, gridPosition.y + 1), // bottom
+                //new Vector3(gridPosition.x - 1, gridPosition.y + 1), // bottom left
+                new Vector3(gridPosition.x - 1, gridPosition.y), // left
+            };
+
+            var neighbors = new List<Node>();
+
+            foreach (Vector3 pos in positions)
+            {
+                Node n = grid.Cell(pos);
+                if (n != null)
+                {
+                    neighbors.Add(n);
+                }
+            }
+
+            return neighbors;
+        }
+
+        public bool Equals(Node x, Node y)
+        {
+            return x.gridPosition.Equals(y);
+        }
+
+        public int GetHashCode(Node obj)
+        {
+            return obj.gridPosition.GetHashCode();
+        }
+
+        public new bool Equals(object x, object y)
+        {
+            return Equals(x, y);
+        }
+
+        public int GetHashCode(object obj)
+        {
+            return GetHashCode(obj);
+        }
+
+        public override string ToString()
+        {
+            return $"gridPosition: {gridPosition}\nmapWorldPosition: {mapWorldPosition}";
         }
     }
 }

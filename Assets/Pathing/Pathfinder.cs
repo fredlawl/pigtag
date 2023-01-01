@@ -13,14 +13,74 @@ namespace Pathing
             this.grid = grid;
         }
 
-        public List<Node> FindPath(Transform from, Transform to, float hCost)
+        public Node GetNode(Vector3 position)
         {
-            var open = new HashSet<Transform>();
-            open.Add(from);
+            return grid.GetNodeFromWorldPosition(position);
+        }
 
-            var cameFrom = new HashSet<Transform>();
-            float gScore = 0;
-            return new List<Node>();
+        /*
+         * h is omitted, it's supplied by the node itself.
+         */
+        public Queue<Node> FindPath(Node from, Node to)
+        {
+            var seen = new HashSet<Node>();
+            var queue = new Utils.PriorityQueue<Node, float>();
+            from.gScore = 0;
+            queue.Enqueue(from, from.gScore);
+
+            while (queue.Count > 0) {
+                var current = queue.Dequeue();
+                seen.Add(current);
+
+                if (current.Equals(to))
+                {
+                    return ReconstrctPath(current, from, to);
+                }
+
+                var neighborPositions = current.Neighbors(grid);
+                foreach (Node neighbor in neighborPositions)
+                {
+                    if (neighbor.isObstructed || seen.Contains(neighbor))
+                    {
+                        continue;
+                    }
+
+                    var tenativeGScore = current.gScore + CalculateDistance(current.gridPosition, neighbor.gridPosition);
+                    if (tenativeGScore < neighbor.gScore)
+                    {
+                        neighbor.parent = current;
+                        neighbor.gScore = tenativeGScore;
+                        neighbor.hScore = CalculateDistance(neighbor.gridPosition, to.gridPosition);
+                        if (!seen.Contains(neighbor))
+                        {
+                            queue.Enqueue(neighbor, neighbor.fScore);
+                        }
+                    }
+                }
+            }
+
+            return new Queue<Node>();
+        }
+
+        private float CalculateDistance(Vector3 from, Vector3 to) 
+        {
+            // return Vector3.Distance(from, to);
+            return Mathf.Abs(from.x - to.x) + Mathf.Abs(from.y - to.y);
+        }
+
+        private Queue<Node> ReconstrctPath(Node current, Node from, Node target)
+        {
+            var path = new List<Node>();
+            Node n = target;
+
+            while (!from.Equals(n))
+            {
+                path.Add(n);
+                n = n.parent;
+            }
+
+            path.Reverse();
+            return new Queue<Node>(path);
         }
     }
 }

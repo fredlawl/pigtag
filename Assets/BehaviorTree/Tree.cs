@@ -5,17 +5,7 @@ namespace BehaviorTree
 {
     public abstract class Tree : MonoBehaviour
     {
-        private Node root = null;
-
-        protected void Awake()
-        {
-            root = SetupTree();
-        }
-
-        protected void Start()
-        {
-            
-        }
+        protected Node root = null;
 
         private void Update()
         {

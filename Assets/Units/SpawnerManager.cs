@@ -13,7 +13,14 @@ public class SpawnerManager : MonoBehaviour
         
     }
 
-    public GameObject Spawn()
+    public GameObject SpawnInactive()
+    {
+        GameObject obj = SpawnActive();
+        obj.SetActive(false);
+        return obj;
+    }
+
+    public GameObject SpawnActive()
     {
         return Instantiate(spawnable, transform.position, transform.rotation);
     }

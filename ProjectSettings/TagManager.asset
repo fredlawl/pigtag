@@ -15,8 +15,8 @@ TagManager:
   - Water
   - UI
   - Background
-  - Sprites
   - Foreground
+  - 
   - 
   - 
   - 
@@ -43,9 +43,6 @@ TagManager:
   m_SortingLayers:
   - name: Background
     uniqueID: 1374385669
-    locked: 0
-  - name: Sprites
-    uniqueID: 1312355515
     locked: 0
   - name: Player
     uniqueID: 560903121

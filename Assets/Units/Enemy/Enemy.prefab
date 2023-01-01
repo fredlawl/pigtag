@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6513790768319013355}
   - component: {fileID: 2513838422335884189}
   - component: {fileID: 2919239595770988183}
-  - component: {fileID: 7192718493769713845}
+  - component: {fileID: 5451233579988510991}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -153,6 +153,7 @@ MonoBehaviour:
     baseDamage: 50
     attacksPerSecond: 1
     attackRange: 1.269
+  pather: {fileID: 0}
 --- !u!114 &2919239595770988183
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -200,7 +201,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &7192718493769713845
+--- !u!114 &5451233579988510991
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -209,9 +210,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 7623642486117208602}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 542462b2d767c1347bbc55e613d4a847, type: 3}
+  m_Script: {fileID: 11500000, guid: 2ea3231d0a359d14cae9dab6c8c68cf9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boundary:
-    m_Center: {x: 0, y: 0, z: 0}
-    m_Extent: {x: 0, y: 0, z: 0}
+  tilemap: {fileID: 0}
+  target: {fileID: 0}

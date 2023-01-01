@@ -15,7 +15,6 @@ GameObject:
   - component: {fileID: 6332965725879632709}
   - component: {fileID: 3939836371031651727}
   - component: {fileID: 119828645197225188}
-  - component: {fileID: 7287962000836544695}
   m_Layer: 3
   m_Name: Farm
   m_TagString: Obstructable
@@ -114,7 +113,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.32, y: 0.32}
+  m_Size: {x: 0.3, y: 0.3}
   m_EdgeRadius: 0
 --- !u!114 &3010178217252923093
 MonoBehaviour:
@@ -212,17 +211,5 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dc9cf55b1d2957845ab6235a8a63d6d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &7287962000836544695
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7899935520061530147}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 542462b2d767c1347bbc55e613d4a847, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
