@@ -50,8 +50,8 @@ namespace Pathing
         {
             return new Vector3()
             {
-                x = position.x - (tilemap.localBounds.center.x - tilemap.size.x * tilemap.tileAnchor.x) + (tilemap.cellSize.x * tilemap.tileAnchor.x) - tilemap.tileAnchor.x,
-                y = position.y - (tilemap.localBounds.center.y - tilemap.size.y * tilemap.tileAnchor.y) + (tilemap.cellSize.y * tilemap.tileAnchor.y) - tilemap.tileAnchor.y,
+                x = Mathf.Clamp(position.x - (tilemap.localBounds.center.x - tilemap.size.x * tilemap.tileAnchor.x) + (tilemap.cellSize.x * tilemap.tileAnchor.x) - tilemap.tileAnchor.x, 0, tilemap.size.x),
+                y = Mathf.Clamp(position.y - (tilemap.localBounds.center.y - tilemap.size.y * tilemap.tileAnchor.y) + (tilemap.cellSize.y * tilemap.tileAnchor.y) - tilemap.tileAnchor.y, 0, tilemap.size.y)
             };
         }
 
@@ -80,7 +80,6 @@ namespace Pathing
         {
             Collider2D collision = Physics2D.OverlapBox(n.mapWorldPosition, tilemap.cellSize / 2, 0, Layers.Collidables);
             n.isObstructed = collision != null;
-            //test 
         }
 
         public Vector3 cellSize => tilemap.cellSize;
@@ -103,7 +102,7 @@ namespace Pathing
         public Node Cell(Vector2Int position)
         {
             var index = position.y * tilemap.size.x + position.x;
-            if (index < 0 || index >= grid.Count)
+            if (index < 0 || index > grid.Count - 1)
             {
                 return null;
             }

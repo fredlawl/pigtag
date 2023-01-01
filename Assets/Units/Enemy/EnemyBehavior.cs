@@ -30,7 +30,6 @@ namespace Enemy
              */
             if (pather == null || pather.pathfinder == null)
             {
-                Debug.Log("is pather really null?");
                 return null;
             }
 
