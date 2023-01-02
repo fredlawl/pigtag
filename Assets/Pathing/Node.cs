@@ -23,6 +23,10 @@ namespace Pathing
         {
             this.mapWorldPosition = worldPosition;
             this.gridPosition = gridPosition;
+        }
+
+        public void Reset()
+        {
             gScore = float.PositiveInfinity;
             hScore = 0;
         }
@@ -30,13 +34,14 @@ namespace Pathing
         public List<Node> Neighbors(GameGrid grid)
         {
             var positions = new List<Vector3>() {
-                //new Vector3(gridPosition.x - 1, gridPosition.y - 1), // top left
+                new Vector3(gridPosition.x - 1, gridPosition.y - 1), // top left
+                new Vector3(gridPosition.x + 1, gridPosition.y - 1), // top right
+                new Vector3(gridPosition.x + 1, gridPosition.y + 1), // bottom right
+                new Vector3(gridPosition.x - 1, gridPosition.y + 1), // bottom left
+
                 new Vector3(gridPosition.x, gridPosition.y - 1), // top
-                //new Vector3(gridPosition.x + 1, gridPosition.y - 1), // top right
                 new Vector3(gridPosition.x + 1, gridPosition.y), // right
-                //new Vector3(gridPosition.x + 1, gridPosition.y + 1), // bottom right
                 new Vector3(gridPosition.x, gridPosition.y + 1), // bottom
-                //new Vector3(gridPosition.x - 1, gridPosition.y + 1), // bottom left
                 new Vector3(gridPosition.x - 1, gridPosition.y), // left
             };
 

@@ -89,6 +89,8 @@ public class GameManager : MonoBehaviour
     {
         // On or after 10 seconds spawn an enemy
         double timeElapsed = countdownTimer.StartTime.TotalSeconds - secondsRemaining;
+        // Fix this logic to actually spawn every second instead of every tick which
+        // can be between seconds.
         if (timeElapsed >= 1 && enemies.Count == 0)
         {
             /*

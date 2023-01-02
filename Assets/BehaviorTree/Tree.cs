@@ -7,7 +7,12 @@ namespace BehaviorTree
     {
         protected Node root = null;
 
-        private void Update()
+        protected virtual void Start()
+        {
+            root = SetupTree();
+        }
+
+        protected virtual void Update()
         {
             root?.Evaluate();
         }

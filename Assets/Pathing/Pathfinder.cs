@@ -25,6 +25,17 @@ namespace Pathing
         {
             var seen = new HashSet<Node>();
             var queue = new Utils.PriorityQueue<Node, float>();
+
+            /*
+             * Since this gets called often, we need to reset the nodes because
+             * we mutate the nodes specifically.
+             * 
+             * TODO: Make Node immutable or struct or something, 
+             * and then adjust algorithms appropriately to handle
+             * that.
+             */ 
+            grid.ResetNodes();
+
             from.gScore = 0;
             queue.Enqueue(from, from.gScore);
 
@@ -40,7 +51,9 @@ namespace Pathing
                 var neighborPositions = current.Neighbors(grid);
                 foreach (Node neighbor in neighborPositions)
                 {
-                    if (neighbor.isObstructed || seen.Contains(neighbor))
+                    // sometimes the target can be half way into an obstruction, in this case
+                    // we can still have a path to them.
+                    if ((neighbor.isObstructed && !neighbor.Equals(to)) || seen.Contains(neighbor))
                     {
                         continue;
                     }

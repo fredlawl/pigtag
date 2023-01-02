@@ -35,6 +35,14 @@ namespace Pathing
             }
         }
 
+        public void ResetNodes()
+        {
+            foreach (Node n in grid)
+            {
+                n.Reset();
+            }
+        }
+
         public Node GetNodeFromWorldPosition(Vector3 position)
         {
             var pos = MapPositionToGridCell(position);
@@ -48,11 +56,13 @@ namespace Pathing
 
         private Vector3 MapPositionToGridCell(Vector3 position)
         {
-            return new Vector3()
-            {
-                x = Mathf.Clamp(position.x - (tilemap.localBounds.center.x - tilemap.size.x * tilemap.tileAnchor.x) + (tilemap.cellSize.x * tilemap.tileAnchor.x) - tilemap.tileAnchor.x, 0, tilemap.size.x),
-                y = Mathf.Clamp(position.y - (tilemap.localBounds.center.y - tilemap.size.y * tilemap.tileAnchor.y) + (tilemap.cellSize.y * tilemap.tileAnchor.y) - tilemap.tileAnchor.y, 0, tilemap.size.y)
-            };
+            float x = position.x - (tilemap.localBounds.center.x - tilemap.size.x * tilemap.tileAnchor.x) + (tilemap.cellSize.x * tilemap.tileAnchor.x) - tilemap.tileAnchor.x;
+            float y = position.y - (tilemap.localBounds.center.y - tilemap.size.y * tilemap.tileAnchor.y) + (tilemap.cellSize.y * tilemap.tileAnchor.y) - tilemap.tileAnchor.y;
+            
+            x = Mathf.Clamp(x, 0, tilemap.size.x - 1);
+            y = Mathf.Clamp(y, 0, tilemap.size.y - 1);
+
+            return new Vector3(x, y);
         }
 
         public void MarkObstructables()

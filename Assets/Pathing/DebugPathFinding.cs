@@ -11,7 +11,7 @@ public class DebugPathFinding : MonoBehaviour
     public Transform target;
 
     private Pathfinder pather;
-    private Queue<Node> path;
+    private GameGrid grid;
 
     private void OnValidate()
     {
@@ -20,14 +20,14 @@ public class DebugPathFinding : MonoBehaviour
             return;
         }
 
-        GameGrid grid = new GameGrid(tilemap);
+        grid = new GameGrid(tilemap);
         pather = new Pathfinder(grid);
         grid.MarkObstructables();
-        path = pather.FindPath(pather.GetNode(transform.position), pather.GetNode(target.position));
     }
 
     private void OnDrawGizmos()
     {
+        var path = pather.FindPath(pather.GetNode(transform.position), pather.GetNode(target.position));
         Gizmos.color = Color.black;
         foreach (Node node in path)
         {

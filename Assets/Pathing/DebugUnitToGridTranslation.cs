@@ -13,15 +13,16 @@ public class DebugUnitToGridTranslation : MonoBehaviour
     {        
         var tilemap = GameObject.Find("World").GetComponent<Tilemap>();
         grid = new GameGrid(tilemap);
-        node = grid.GetNodeFromWorldPosition(transform.position);
     }
 
     private void OnDrawGizmos()
     {
-        if (grid == null || node == null)
+        if (grid == null)
         {
             return;
         }
+
+        node = grid.GetNodeFromWorldPosition(transform.position);
 
         Gizmos.color = Color.green;
         Gizmos.DrawCube(transform.position, new Vector3(1, 1));

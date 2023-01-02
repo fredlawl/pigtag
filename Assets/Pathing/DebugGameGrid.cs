@@ -21,7 +21,6 @@ public class DebugGameGrid : MonoBehaviour
     private void OnValidate()
     {
         grid = new GameGrid(GetComponent<Tilemap>());
-        grid.MarkObstructables();
     }
 
     private void OnDrawGizmos()
@@ -35,6 +34,8 @@ public class DebugGameGrid : MonoBehaviour
         {
             return;
         }
+
+        grid.MarkObstructables();
 
         for (int y = 0; y < grid.size.y; y++)
         {

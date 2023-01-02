@@ -11,11 +11,22 @@ namespace Enemy
         public float movementSpeed = 10f;
         public AttackStats attackStats;
 
-        private int count = 0;
+        /*
+         * Strictly debugging:
+         */
+        //private Pathing.Pather pather;
+        //private GameObject player;
+        //private Queue<Pathing.Node> path = new Queue<Pathing.Node>();
 
-        private void OnEnable()
+        protected override void Start()
+        {
+        }
+
+        protected void OnEnable()
         {
             root = SetupTree();
+            //player = GameObject.Find("Player");
+            //pather = GetComponent<Pathing.Pather>();
         }
 
         protected override Node SetupTree()
@@ -53,6 +64,31 @@ namespace Enemy
                 new DummyPatrol()
             });
         }
+
+        //private void FixedUpdate()
+        //{
+        //    if (pather == null || pather.pathfinder == null || player == null)
+        //    {
+        //        return;
+        //    }
+
+        //    Pathing.Pathfinder pathfinder = pather.pathfinder;
+        //    path = pathfinder.FindPath(pathfinder.GetNode(transform.position), pathfinder.GetNode(player.transform.position));
+        //}
+
+        //private void LateUpdate()
+        //{
+        //    if (path.Count > 0)
+        //    {
+        //        Pathing.Node next = path.Dequeue();
+        //        var movement = Vector2.MoveTowards(transform.position, next.mapWorldPosition, Time.deltaTime * movementSpeed);
+        //        //var movement = next.mapWorldPosition;
+        //        //var movement = Vector3.Lerp(transform.position, next.mapWorldPosition, Time.deltaTime * movementSpeed);
+        //        //rigidbody.MovePosition(movement);
+        //        transform.position = movement;
+        //        //rigidbody.MovePosition(movement);
+        //    }
+        //}
 
         public void OnDied()
         {
