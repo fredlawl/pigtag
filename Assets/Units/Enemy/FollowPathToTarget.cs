@@ -24,8 +24,7 @@ namespace Enemy
             {
                 Pathing.Node next = path.Dequeue();
                 var movement = Vector2.MoveTowards(transform.position, next.mapWorldPosition, Time.deltaTime * movementSpeed);
-                //rigidbody.MovePosition(movement);
-                transform.position = movement;
+                rigidbody.MovePosition(movement);
             }
 
             return State.Running;
