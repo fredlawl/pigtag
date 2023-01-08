@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Enemy
 {
-    public class EnemyAttack : BehaviorTree.Node
+    public class AttackTarget : BehaviorTree.Node
     {
         private Transform lastTarget;
         private float numberOfAttacksPerSecond = 1f;
@@ -12,7 +12,7 @@ namespace Enemy
         private Health targetHealth;
         private AttackStats attackStats;
 
-        public EnemyAttack(AttackStats attackStats)
+        public AttackTarget(AttackStats attackStats)
         {
             this.attackStats = attackStats;
         }

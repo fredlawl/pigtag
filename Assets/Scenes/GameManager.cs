@@ -90,7 +90,7 @@ public class GameManager : MonoBehaviour, IPointerClickHandler
         double timeElapsed = countdownTimer.StartTime.TotalSeconds - secondsRemaining;
         // Fix this logic to actually spawn every second instead of every tick which
         // can be between seconds.
-        if (timeElapsed >= 1 && enemies.Count == 0)
+        if (timeElapsed >= 10 && enemies.Count == 0)
         {
             /*
              * there's a bug here that if the instantiation fails, then 
@@ -123,7 +123,6 @@ public class GameManager : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        Debug.Log("world clicked?");
         mapClickEvent.Invoke(eventData);
     }
 }

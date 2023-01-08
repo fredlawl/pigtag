@@ -34,17 +34,12 @@ namespace Enemy
                 new Sequence(new List<Node>()
                 {
                     new CheckEnemyInAttackRange(attackStats.AttackRange, transform),
-                    new EnemyAttack(attackStats)
+                    new AttackTarget(attackStats)
                 }),
-                //new Sequence(new List<Node>()
-                //{
-                //    new FindPlayerFromCurrentPosition(transform),
-                //    new DashToTarget(movementSpeed, GetComponent<Rigidbody2D>(), transform),
-                //}),
                 new Sequence(new List<Node>()
                 {
-                    new FindPathToPlayer(pathable.pathfinder, transform),
-                    new FollowPathToTarget(movementSpeed, GetComponent<Rigidbody2D>(), transform)
+                    new LocatePlayer(),
+                    new FollowPathToTarget(pathable.pathfinder, movementSpeed, GetComponent<Rigidbody2D>(), transform)
                 }),
                 new DummyPatrol()
             });

@@ -12,32 +12,35 @@ namespace Player
         private Pathable pathable;
         private Vector3 newPosition;
         private Queue<Vector3> path = new Queue<Vector3>();
+        
+        private float timer;
+        private Vector3 currentPositionHolder;
+        private Vector3 startPosition;
 
         void Start()
         {
             rb = gameObject.GetComponent<Rigidbody2D>();
             pathable = gameObject.GetComponent<Pathable>();
+            startPosition = transform.position;
+            currentPositionHolder = startPosition;
         }
 
         private void Update()
         {
-
-        }
-
-        void FixedUpdate()
-        {
-            /*
-             * TODO: Player character should actually move when clicking on the
-             * ground, and then the sprite moves in that direction...
-             * Pathing is going to be a big deal...
-             */
-            Queue<Vector3> path = pathable.pathfinder.FindPath(transform.position, newPosition);
-            while (path.Count > 0)
+            timer += Time.deltaTime * speed;
+            if (transform.position != currentPositionHolder)
             {
-                Vector3 next = path.Dequeue();
-                var movement = Vector2.MoveTowards(transform.position, next, Time.deltaTime * speed);
-                rb.MovePosition(movement);
-                //transform.position = movement;
+                transform.position = Vector3.Lerp(startPosition, currentPositionHolder, timer);
+            } 
+            else 
+            {
+                if (path.Count > 0)
+                {
+                    currentPositionHolder = path.Dequeue();
+                }
+
+                startPosition = transform.position;
+                timer = 0;
             }
         }
 
@@ -46,6 +49,7 @@ namespace Player
             if (PointerEventData.InputButton.Right == eventData.button)
             {
                 newPosition = eventData.pointerCurrentRaycast.worldPosition;
+                path = pathable.pathfinder.FindPath(transform.position, newPosition);
             }
         }
     }
