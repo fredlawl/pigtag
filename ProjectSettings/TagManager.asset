@@ -14,9 +14,9 @@ TagManager:
   - Player
   - Water
   - UI
-  - Background
+  - Map
   - Foreground
-  - 
+  - Map Obstacle
   - 
   - 
   - 
@@ -41,8 +41,11 @@ TagManager:
   - 
   - 
   m_SortingLayers:
-  - name: Background
+  - name: Map
     uniqueID: 1374385669
+    locked: 0
+  - name: Map Obstacle
+    uniqueID: 843787455
     locked: 0
   - name: Player
     uniqueID: 560903121

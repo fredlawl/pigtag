@@ -2,10 +2,11 @@ using Enemy;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
 
-public class GameManager : MonoBehaviour
+public class GameManager : MonoBehaviour, IPointerClickHandler
 {
     private bool gameIsPaused = false;
 
@@ -16,9 +17,6 @@ public class GameManager : MonoBehaviour
     private SpawnerManager enemySpawner;
 
     [SerializeField]
-    private GameCamera.TrackObject trackableCamera;
-
-    [SerializeField]
     private CountdownTimer countdownTimer;
 
     private GameObject player;
@@ -27,6 +25,9 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private Tilemap map;
     private Pathing.GameGrid gameGrid;
+
+    public delegate void OnMapClick(PointerEventData eventData);
+    public event OnMapClick mapClickEvent; 
 
     private void Awake()
     {
@@ -40,12 +41,10 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         player = playerSpawner.SpawnInactive();
-        PlayableBoundary playerPlayableBoundary = player.AddComponent<PlayableBoundary>();
-        playerPlayableBoundary.boundary = map.localBounds;
+        mapClickEvent += player.GetComponent<Player.ClickMovement>().OnPointerClick;
         player.GetComponent<Player.PlayerManager>().onDied.AddListener(OnPlayerDied);
-        //Pathing.Pather p = player.AddComponent<Pathing.Pather>();
-        //p.pathfinder = pathfinder;
-        trackableCamera.objectToTrack = player;
+        Pathable pathable = player.AddComponent<Pathable>();
+        pathable.pathfinder = gameGrid;
         player.name = "Player";
         player.SetActive(true);
     }
@@ -120,5 +119,11 @@ public class GameManager : MonoBehaviour
     private void OnPlayerDied()
     {
         SceneManager.LoadScene("GameOverLoose");
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        Debug.Log("world clicked?");
+        mapClickEvent.Invoke(eventData);
     }
 }

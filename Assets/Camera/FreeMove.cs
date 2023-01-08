@@ -8,14 +8,13 @@ namespace GameCamera
     {
         private Vector2 input;
         public float speed = 8;
+        public Transform startAt;
 
-        // Start is called before the first frame update
         void Start()
         {
-
+            transform.position = new Vector3(startAt.position.x, startAt.position.y, transform.position.z);
         }
 
-        // Update is called once per frame
         private void Update()
         {
             input = new Vector2()
