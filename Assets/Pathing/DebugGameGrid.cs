@@ -21,6 +21,7 @@ public class DebugGameGrid : MonoBehaviour
     private void OnValidate()
     {
         grid = new GameGrid(GetComponent<Tilemap>());
+        grid.HydrateObstacles();
     }
 
     private void OnDrawGizmos()
@@ -35,21 +36,19 @@ public class DebugGameGrid : MonoBehaviour
             return;
         }
 
-        grid.MarkObstructables();
-
         for (int y = 0; y < grid.size.y; y++)
         {
             for (int x = 0; x < grid.size.x; x++)
             {
                 Node n = grid.Cell(x, y);
-                Gizmos.DrawWireCube(n.mapWorldPosition, grid.cellSize);
-
-                if (n.isObstructed)
-                {
-                    Gizmos.DrawCube(n.mapWorldPosition, grid.cellSize);
-                    Gizmos.DrawCube(n.gridPosition, grid.cellSize);
-                }
+                Gizmos.DrawWireCube(n.worldPosition, grid.cellSize);
             }
+        }
+
+        foreach (Node n in grid.Obstacles())
+        {
+            Gizmos.DrawCube(n.worldPosition, grid.cellSize);
+            Gizmos.DrawCube(n.gridPosition, grid.cellSize);
         }
     }
 }

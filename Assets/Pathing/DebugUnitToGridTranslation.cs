@@ -28,7 +28,7 @@ public class DebugUnitToGridTranslation : MonoBehaviour
         Gizmos.DrawCube(transform.position, new Vector3(1, 1));
 
         Gizmos.color = Color.red;
-        Gizmos.DrawCube(node.mapWorldPosition, new Vector3(1, 1));
+        Gizmos.DrawCube(node.worldPosition, new Vector3(1, 1));
 
         Gizmos.color = Color.cyan;
         Gizmos.DrawCube(node.gridPosition, new Vector3(1, 1));

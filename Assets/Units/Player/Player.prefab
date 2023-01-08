@@ -12,9 +12,10 @@ GameObject:
   - component: {fileID: 2691025810351285888}
   - component: {fileID: 5594097511348191483}
   - component: {fileID: 40729493666452330}
+  - component: {fileID: 2996438697016055443}
   - component: {fileID: 502804293039625039}
-  - component: {fileID: 832765820375778804}
   - component: {fileID: 842392487557780169}
+  - component: {fileID: 301786706963948390}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -136,6 +137,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.32, y: 0.32}
   m_EdgeRadius: 0
+--- !u!114 &2996438697016055443
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1959277218477586564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae4c239853442064cad418a0a1daad21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &502804293039625039
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -183,19 +196,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &832765820375778804
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1959277218477586564}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f10c9129819f3be4c9c0e3b98ab64cb4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 8
 --- !u!114 &842392487557780169
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -211,3 +211,16 @@ MonoBehaviour:
   onDied:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &301786706963948390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1959277218477586564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f10c9129819f3be4c9c0e3b98ab64cb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 8

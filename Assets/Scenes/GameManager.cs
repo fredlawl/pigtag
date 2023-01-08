@@ -27,7 +27,6 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private Tilemap map;
     private Pathing.GameGrid gameGrid;
-    private Pathing.Pathfinder pathfinder;
 
     private void Awake()
     {
@@ -35,8 +34,7 @@ public class GameManager : MonoBehaviour
         countdownTimer.onFinished.AddListener(OnCountdownTimerFinished);
 
         gameGrid = new Pathing.GameGrid(map);
-        gameGrid.MarkObstructables();
-        pathfinder = new Pathing.Pathfinder(gameGrid);
+        gameGrid.HydrateObstacles();
     }
 
     private void Start()
@@ -45,6 +43,8 @@ public class GameManager : MonoBehaviour
         PlayableBoundary playerPlayableBoundary = player.AddComponent<PlayableBoundary>();
         playerPlayableBoundary.boundary = map.localBounds;
         player.GetComponent<Player.PlayerManager>().onDied.AddListener(OnPlayerDied);
+        //Pathing.Pather p = player.AddComponent<Pathing.Pather>();
+        //p.pathfinder = pathfinder;
         trackableCamera.objectToTrack = player;
         player.name = "Player";
         player.SetActive(true);
@@ -100,8 +100,8 @@ public class GameManager : MonoBehaviour
             GameObject obj = enemySpawner.SpawnInactive();
             enemies.Add(obj);
 
-            Pathing.Pather p = obj.AddComponent<Pathing.Pather>();
-            p.pathfinder = pathfinder;
+            Pathable p = obj.AddComponent<Pathable>();
+            p.pathfinder = gameGrid;
 
             obj.SetActive(true);
         }

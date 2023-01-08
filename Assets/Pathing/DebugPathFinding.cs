@@ -9,8 +9,6 @@ public class DebugPathFinding : MonoBehaviour
 {
     public Tilemap tilemap;
     public Transform target;
-
-    private Pathfinder pather;
     private GameGrid grid;
 
     private void OnValidate()
@@ -21,18 +19,16 @@ public class DebugPathFinding : MonoBehaviour
         }
 
         grid = new GameGrid(tilemap);
-        pather = new Pathfinder(grid);
-        grid.MarkObstructables();
+        grid.HydrateObstacles();
     }
 
     private void OnDrawGizmos()
     {
-        var path = pather.FindPath(pather.GetNode(transform.position), pather.GetNode(target.position));
+        var path = grid.FindPath(transform.position, target.position);
         Gizmos.color = Color.black;
-        foreach (Node node in path)
+        foreach (Vector3 node in path)
         {
-            Gizmos.DrawCube(node.mapWorldPosition, new Vector3(1, 1, -1));
-            Gizmos.DrawCube(node.gridPosition, new Vector3(1, 1, -1));
+            Gizmos.DrawCube(node, new Vector3(1, 1, -1));
         }
     }
 }

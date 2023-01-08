@@ -6,41 +6,20 @@ using System;
 
 namespace Pathing
 {
-    public class GameGrid
+    public class GameGrid : IPathfinder
     {
         private Tilemap tilemap;
-        private List<Node> grid = new List<Node>();
         public Vector2Int size => new Vector2Int(tilemap.size.x, tilemap.size.y);
+        private HashSet<Node> obstacles = new HashSet<Node>();
+        public bool hasObstacles => obstaclesCount > 0;
+        public int obstaclesCount => obstacles.Count;
+        public Vector3 cellSize => tilemap.cellSize;
 
         private GameGrid() { }
 
         public GameGrid(Tilemap map)
         {
             tilemap = map;
-            grid = new List<Node>(tilemap.size.x * tilemap.size.y);
-
-            // Populate grid
-            for (int y = 0; y < tilemap.size.y; y++)
-            {
-                for (int x = 0; x < tilemap.size.x; x++)
-                {
-                    Node n = new Node(new Vector3()
-                    {
-                        x = x + (tilemap.localBounds.center.x - tilemap.size.x * tilemap.tileAnchor.x) + (tilemap.cellSize.x * tilemap.tileAnchor.x),
-                        y = y + (tilemap.localBounds.center.y - tilemap.size.y * tilemap.tileAnchor.y) + (tilemap.cellSize.y * tilemap.tileAnchor.y),
-                    }, new Vector3(x, y));
-
-                    grid.Add(n);
-                }
-            }
-        }
-
-        public void ResetNodes()
-        {
-            foreach (Node n in grid)
-            {
-                n.Reset();
-            }
         }
 
         public Node GetNodeFromWorldPosition(Vector3 position)
@@ -65,34 +44,53 @@ namespace Pathing
             return new Vector3(x, y);
         }
 
-        public void MarkObstructables()
+        /*
+         * Convient way to add grid obstacales automatically
+         */
+        public void HydrateObstacles()
         {
             for (int y = 0; y < tilemap.size.y; y++)
             {
                 for (int x = 0; x < tilemap.size.x; x++)
                 {
                     Node n = Cell(x, y);
-                    AddObstruction(n);
+                    AddObstacle(n);
                 }
             }
         }
 
-        public void AddObstruction(Vector3 location)
+        public void AddObstacle(Vector3 location)
         {
             Node n = Cell(location);
             if (n != null)
             {
-                AddObstruction(n);
+                AddObstacle(n);
             }
         }
 
-        public void AddObstruction(Node n)
+        public bool IsObstacle(Node node)
         {
-            Collider2D collision = Physics2D.OverlapBox(n.mapWorldPosition, tilemap.cellSize / 2, 0, Layers.Collidables);
-            n.isObstructed = collision != null;
+            return obstacles.Contains(node);
         }
 
-        public Vector3 cellSize => tilemap.cellSize;
+        public void AddObstacle(Node n)
+        {
+            Collider2D collision = Physics2D.OverlapBox(n.worldPosition, tilemap.cellSize / 2, 0, Layers.Collidables);
+            if (collision != null)
+            {
+                obstacles.Add(n);
+            }
+        }
+
+        public bool RemoveObstacle(Node n)
+        {
+            return obstacles.Remove(n);
+        }
+
+        public IEnumerable<Node> Obstacles()
+        {
+            return obstacles;
+        }
 
         public Node Cell(int x, int y)
         {
@@ -111,13 +109,111 @@ namespace Pathing
 
         public Node Cell(Vector2Int position)
         {
-            var index = position.y * tilemap.size.x + position.x;
-            if (index < 0 || index > grid.Count - 1)
+            if (position.x < 0 || position.x > tilemap.size.x - 1)
             {
                 return null;
             }
 
-            return grid[index];
+            if (position.y < 0 || position.y > tilemap.size.y - 1)
+            {
+                return null;
+            }
+
+            Node n = new Node(new Vector3()
+            {
+                x = position.x + (tilemap.localBounds.center.x - tilemap.size.x * tilemap.tileAnchor.x) + (tilemap.cellSize.x * tilemap.tileAnchor.x),
+                y = position.y + (tilemap.localBounds.center.y - tilemap.size.y * tilemap.tileAnchor.y) + (tilemap.cellSize.y * tilemap.tileAnchor.y),
+            }, new Vector3(position.x, position.y));
+
+            return n;
+        }
+
+        public Queue<Vector3> FindPath(Vector3 from, Vector3 to)
+        {
+            var start = GetNodeFromWorldPosition(from);
+            var end = GetNodeFromWorldPosition(to);
+            return FindPathImpl(start, end);
+        }
+
+        private Queue<Vector3> FindPathImpl(Node from, Node to)
+        {
+            var seen = new HashSet<Node>();
+            var openSet = new Utils.PriorityQueue<Node, float>();
+            var cameFrom = new Dictionary<Node, Node>();
+            var gScore = new Dictionary<Node, float>();
+            var fScore = new Dictionary<Node, float>();
+
+            openSet.Enqueue(from, 0);
+            gScore.Add(from, 0);
+            fScore.Add(from, 0);
+
+            while (openSet.Count > 0)
+            {
+                var current = openSet.Dequeue();
+                seen.Add(current);
+
+                if (current.Equals(to))
+                {
+                    return ReconstrctPath(cameFrom, from, current);
+                }
+
+                var neighborPositions = current.Neighbors(this);
+                foreach (Node neighbor in neighborPositions)
+                {
+                    // sometimes the target can be half way into an obstruction, in this case
+                    // we can still have a path to them.
+                    if (IsObstacle(neighbor) && !neighbor.Equals(to))
+                    {
+                        continue;
+                    }
+
+                    gScore.TryAdd(neighbor, float.PositiveInfinity);
+                    fScore.TryAdd(neighbor, float.PositiveInfinity);
+
+                    var tenativeGScore = gScore[current] + CalculateDistance(current.gridPosition, neighbor.gridPosition);
+                    if (tenativeGScore < gScore[neighbor])
+                    {
+                        if (!cameFrom.ContainsKey(neighbor))
+                        {
+                            cameFrom.Add(neighbor, current);
+                        }
+
+                        cameFrom[neighbor] = current;
+                        gScore[neighbor] = tenativeGScore;
+                        fScore[neighbor] = tenativeGScore + CalculateDistance(neighbor.gridPosition, to.gridPosition);
+                        if (!seen.Contains(neighbor))
+                        {
+                            openSet.Enqueue(neighbor, fScore[neighbor]);
+                        }
+                    }
+                }
+            }
+
+            return new Queue<Vector3>();
+        }
+
+        private float CalculateDistance(Vector3 from, Vector3 to)
+        {
+            return Vector3.Distance(from, to);
+        }
+
+        private Queue<Vector3> ReconstrctPath(Dictionary<Node, Node> cameFrom, Node start, Node current)
+        {
+            var path = new List<Vector3>();
+            Node node = current;
+
+            path.Add(current.worldPosition);
+            while (cameFrom.ContainsKey(node))
+            {
+                node = cameFrom[node];
+                if (!start.Equals(node))
+                {
+                    path.Add(node.worldPosition);
+                }
+            }
+
+            path.Reverse();
+            return new Queue<Vector3>(path);
         }
     }
 }

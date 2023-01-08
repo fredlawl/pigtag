@@ -19,12 +19,13 @@ namespace Enemy
 
         public override BehaviorTree.Node.State Evaluate()
         {
-            Queue<Pathing.Node> path = (Queue<Pathing.Node>)GetData("path_to_player");
-            if (path.Count > 0)
+            Queue<Vector3> path = (Queue<Vector3>)GetData("path_to_player");
+            while (path.Count > 0)
             {
-                Pathing.Node next = path.Dequeue();
-                var movement = Vector2.MoveTowards(transform.position, next.mapWorldPosition, Time.deltaTime * movementSpeed);
-                rigidbody.MovePosition(movement);
+                Vector3 next = path.Dequeue();
+                var movement = Vector2.MoveTowards(transform.position, next, Time.deltaTime * movementSpeed);
+                //rigidbody.MovePosition(movement);
+                transform.position = movement;
             }
 
             return State.Running;
