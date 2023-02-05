@@ -7,6 +7,8 @@ namespace Enemy
 {
     class LocatePlayer : BehaviorTree.Node
     {
+        private GameObject playerObj;
+
         public LocatePlayer()
         {
         }
@@ -20,17 +22,15 @@ namespace Enemy
             }
 
             /*
-            * Consider using Layers.Player here, but keep 
-            * in mind that we want to target the player specifically
-            * not just the nearest object on the player layer
-            */
-            GameObject player = GameObject.Find("Player");
-            if (player == null)
+             * Memoize playerObj
+             */
+            if (playerObj == null)
             {
+                playerObj = GameObject.Find("Player");
                 return State.Failure;
             }
 
-            GetRootNode().SetData("target", player.transform);
+            GetRootNode().SetData("target", playerObj.transform);
             return State.Success;
         }
     }

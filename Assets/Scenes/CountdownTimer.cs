@@ -36,6 +36,8 @@ public class CountdownTimer : MonoBehaviour
 
     public TimeSpan StartTime => span;
 
+    public string prefix;
+
     private void Awake()
     {
         Stop();
@@ -86,6 +88,6 @@ public class CountdownTimer : MonoBehaviour
 
     private void LateUpdate()
     {
-        display.text = new TimeSpan(0, 0, (int)secondsRemaining).ToString();
+        display.text = $"{prefix} {new TimeSpan(0, 0, (int)secondsRemaining)}";
     }
 }

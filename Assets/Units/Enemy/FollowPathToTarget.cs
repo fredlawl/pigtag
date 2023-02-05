@@ -11,11 +11,13 @@ namespace Enemy
         private Transform transform;
 
         private float timer;
-        private Vector3 currentPositionHolder;
+        private Vector3 nextPosition;
         private Vector3 startPosition;
         private Vector3 playerPosition;
         private Queue<Vector3> foundPath = new Queue<Vector3>();
         private Pathing.IPathfinder pathfinder;
+        private Animator animator;
+        private SpriteRenderer sr;
 
         public FollowPathToTarget(Pathing.IPathfinder pathfinder, float movementSpeed, Rigidbody2D rigidbody, Transform transform)
         {
@@ -25,7 +27,9 @@ namespace Enemy
             this.pathfinder = pathfinder;
 
             startPosition = transform.position;
-            currentPositionHolder = startPosition;
+            nextPosition = startPosition;
+            animator = transform.gameObject.GetComponent<Animator>();
+            sr = transform.gameObject.GetComponent<SpriteRenderer>();
         }
 
         public override BehaviorTree.Node.State Evaluate()
@@ -43,20 +47,31 @@ namespace Enemy
                 foundPath = pathfinder.FindPath(transform.position, playerPosition);
                 if (foundPath.Count == 0)
                 {
+                    animator.Play("Stationary");
                     return State.Failure;
+                }
+                else
+                {
+                    // Not very portable because it depends on start position but w/e
+                    sr.flipX = transform.position.x < targetPosition.position.x;
                 }
             }
 
             timer += Time.deltaTime * movementSpeed;
-            if (transform.position != currentPositionHolder)
+            if (transform.position != nextPosition)
             {
-                transform.position = Vector3.Lerp(startPosition, currentPositionHolder, timer);
+                transform.position = Vector3.Lerp(startPosition, nextPosition, timer);
             }
             else
             {
                 if (foundPath.Count > 0)
                 {
-                    currentPositionHolder = foundPath.Dequeue();
+                    nextPosition = foundPath.Dequeue();
+                    animator.Play("Running");
+                }
+                else 
+                {
+                    animator.Play("Stationary");
                 }
 
                 startPosition = transform.position;

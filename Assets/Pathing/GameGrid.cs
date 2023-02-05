@@ -35,8 +35,8 @@ namespace Pathing
 
         private Vector3 MapPositionToGridCell(Vector3 position)
         {
-            float x = position.x - (tilemap.localBounds.center.x - tilemap.size.x * tilemap.tileAnchor.x) + (tilemap.cellSize.x * tilemap.tileAnchor.x) - tilemap.tileAnchor.x;
-            float y = position.y - (tilemap.localBounds.center.y - tilemap.size.y * tilemap.tileAnchor.y) + (tilemap.cellSize.y * tilemap.tileAnchor.y) - tilemap.tileAnchor.y;
+            float x = position.x - (tilemap.localBounds.center.x - tilemap.size.x * tilemap.tileAnchor.x) + (cellSize.x * tilemap.tileAnchor.x) - tilemap.tileAnchor.x;
+            float y = position.y - (tilemap.localBounds.center.y - tilemap.size.y * tilemap.tileAnchor.y) + (cellSize.y * tilemap.tileAnchor.y) - tilemap.tileAnchor.y;
             
             x = Mathf.Clamp(x, 0, tilemap.size.x - 1);
             y = Mathf.Clamp(y, 0, tilemap.size.y - 1);
@@ -75,7 +75,7 @@ namespace Pathing
 
         public void AddObstacle(Node n)
         {
-            Collider2D collision = Physics2D.OverlapBox(n.worldPosition, tilemap.cellSize / 2, 0, Layers.Collidables);
+            Collider2D collision = Physics2D.OverlapBox(n.worldPosition, cellSize / 2, 0, Layers.Collidables);
             if (collision != null)
             {
                 obstacles.Add(n);
@@ -121,8 +121,8 @@ namespace Pathing
 
             Node n = new Node(new Vector3()
             {
-                x = position.x + (tilemap.localBounds.center.x - tilemap.size.x * tilemap.tileAnchor.x) + (tilemap.cellSize.x * tilemap.tileAnchor.x),
-                y = position.y + (tilemap.localBounds.center.y - tilemap.size.y * tilemap.tileAnchor.y) + (tilemap.cellSize.y * tilemap.tileAnchor.y),
+                x = position.x + (tilemap.localBounds.center.x - tilemap.size.x * tilemap.tileAnchor.x) + (cellSize.x * tilemap.tileAnchor.x),
+                y = position.y + (tilemap.localBounds.center.y - tilemap.size.y * tilemap.tileAnchor.y) + (cellSize.y * tilemap.tileAnchor.y),
             }, new Vector3(position.x, position.y));
 
             return n;

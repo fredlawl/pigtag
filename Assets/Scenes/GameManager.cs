@@ -27,7 +27,9 @@ public class GameManager : MonoBehaviour, IPointerClickHandler
     private Pathing.GameGrid gameGrid;
 
     public delegate void OnMapClick(PointerEventData eventData);
-    public event OnMapClick mapClickEvent; 
+    public event OnMapClick mapClickEvent;
+
+    private IBuildState buildState;
 
     private void Awake()
     {
@@ -41,12 +43,15 @@ public class GameManager : MonoBehaviour, IPointerClickHandler
     private void Start()
     {
         player = playerSpawner.SpawnInactive();
-        mapClickEvent += player.GetComponent<Player.ClickMovement>().OnPointerClick;
+        var clickMovement = player.GetComponent<Player.ClickMovement>();
+        mapClickEvent += clickMovement.OnPointerClick;
         player.GetComponent<Player.PlayerManager>().onDied.AddListener(OnPlayerDied);
         Pathable pathable = player.AddComponent<Pathable>();
         pathable.pathfinder = gameGrid;
         player.name = "Player";
         player.SetActive(true);
+
+        buildState = new Entry();
     }
 
     private void Update()
@@ -56,6 +61,8 @@ public class GameManager : MonoBehaviour, IPointerClickHandler
         {
             TogglePlay();
         }
+
+        buildState = buildState.doAction();
     }
 
     private void Pause()
@@ -124,5 +131,54 @@ public class GameManager : MonoBehaviour, IPointerClickHandler
     public void OnPointerClick(PointerEventData eventData)
     {
         mapClickEvent.Invoke(eventData);
+    }
+
+    private interface IBuildState
+    {
+        public IBuildState doAction();
+    }
+
+    private class Entry : IBuildState
+    {
+        public IBuildState doAction()
+        {
+            if (Input.GetKeyDown(KeyCode.B))
+            {
+                return new BuilderState();
+            }
+
+            return this;
+        }
+    }
+
+    private class BuilderState : IBuildState
+    {
+        public IBuildState doAction()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                return new Entry();
+            }
+
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                return new BuildFarm();
+            }
+
+            return this;
+        }
+    }
+
+    private class BuildFarm : IBuildState
+    {
+        public IBuildState doAction()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                return new BuilderState();
+            }
+
+            return this;
+        }
     }
 }

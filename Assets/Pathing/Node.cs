@@ -45,7 +45,6 @@ namespace Pathing
             return neighbors;
         }
 
-
         public override string ToString()
         {
             return $"gridPosition: {gridPosition}\nmapWorldPosition: {worldPosition}";
