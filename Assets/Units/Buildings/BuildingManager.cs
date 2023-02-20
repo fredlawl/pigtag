@@ -4,8 +4,10 @@ using UnityEngine;
 
 namespace Building
 {
-    public class BuildingManager : MonoBehaviour
+    public class BuildingManager : MonoBehaviour, IBuildable<BuildingManager>
     {
+        public GameObject owner;
+
         public void OnDamaged(float amount)
         {
             /*
@@ -21,6 +23,13 @@ namespace Building
         {
             Debug.Log($"{gameObject.name} died!");
             gameObject.SetActive(false);
+        }
+
+        public BuildingManager Spawn(GameObject owner)
+        {
+            var building = new BuildingManager();
+            building.owner = owner;
+            return building;
         }
     }
 }

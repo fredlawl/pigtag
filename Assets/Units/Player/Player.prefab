@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 40729493666452330}
   - component: {fileID: 502804293039625039}
   - component: {fileID: 842392487557780169}
+  - component: {fileID: 8454458187897320156}
   - component: {fileID: 4583662851582976563}
   - component: {fileID: 3475807666060359161}
   m_Layer: 3
@@ -199,6 +200,20 @@ MonoBehaviour:
   onDied:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &8454458187897320156
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1959277218477586564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6320c81c104e31b41a74ce5ad53e2fe3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buildables:
+  - {fileID: 119828645197225188, guid: 75019afc584305144948974f29882c28, type: 3}
 --- !u!114 &4583662851582976563
 MonoBehaviour:
   m_ObjectHideFlags: 0
