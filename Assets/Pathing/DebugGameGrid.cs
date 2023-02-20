@@ -17,10 +17,27 @@ public class DebugGameGrid : MonoBehaviour
 
     private GameGrid grid;
 
+    Tilemap difficultTerrain;
+
     // Start is called before the first frame update
     private void OnValidate()
     {
         grid = new GameGrid(GetComponent<Tilemap>());
+        difficultTerrain = GameObject.Find("DifficultTerrain").GetComponent<Tilemap>();
+
+        // Necessary for loading in difficult terrain based on tile map data
+        for (int y = difficultTerrain.cellBounds.y; y < difficultTerrain.cellBounds.yMax; y++)
+        {
+            for (int x = difficultTerrain.cellBounds.x; x < difficultTerrain.cellBounds.xMax; x++)
+            {
+                var pos = new Vector3Int(x, y, 0);
+                if (difficultTerrain.HasTile(pos))
+                {
+                    grid.AddObstacle(grid.GetNodeFromWorldPosition(pos).gridPosition);
+                }
+            }
+        }
+
         grid.HydrateObstacles();
     }
 

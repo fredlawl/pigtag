@@ -54,7 +54,11 @@ namespace Pathing
                 for (int x = 0; x < tilemap.size.x; x++)
                 {
                     Node n = Cell(x, y);
-                    AddObstacle(n);
+                    Collider2D collision = Physics2D.OverlapBox(n.worldPosition, cellSize / 2, 0, Layers.Collidables);
+                    if (collision != null)
+                    {
+                        AddObstacle(n);
+                    }
                 }
             }
         }
@@ -75,11 +79,9 @@ namespace Pathing
 
         public void AddObstacle(Node n)
         {
-            Collider2D collision = Physics2D.OverlapBox(n.worldPosition, cellSize / 2, 0, Layers.Collidables);
-            if (collision != null)
-            {
+            
                 obstacles.Add(n);
-            }
+            //}
         }
 
         public bool RemoveObstacle(Node n)
