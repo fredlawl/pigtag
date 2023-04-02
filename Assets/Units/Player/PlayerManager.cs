@@ -9,6 +9,7 @@ namespace Player
     public class PlayerManager : MonoBehaviour
     {
         public UnityEvent onDied;
+        public List<Building.Building> buildableBuildings = new List<Building.Building>();
         
         public void Awake()
         {

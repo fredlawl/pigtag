@@ -59,15 +59,22 @@ public class GameManager : MonoBehaviour, IPointerClickHandler
     private void Start()
     {
         player = playerSpawner.SpawnInactive();
+        var manager = player.GetComponent<Player.PlayerManager>();
         var clickMovement = player.GetComponent<Player.ClickMovement>();
         mapClickEvent += clickMovement.OnPointerClick;
-        player.GetComponent<Player.PlayerManager>().onDied.AddListener(OnPlayerDied);
+        manager.onDied.AddListener(OnPlayerDied);
         Pathable pathable = player.AddComponent<Pathable>();
         pathable.pathfinder = gameGrid;
         player.name = "Player";
-        player.SetActive(true);
 
-        buildState = new Entry();
+        buildState = new Entry(new BuildStateConfig
+        {
+            owner = player,
+            buildables = manager.buildableBuildings,
+            gameGrid = gameGrid
+        });
+
+        player.SetActive(true);
     }
 
     private void Update()
@@ -149,6 +156,13 @@ public class GameManager : MonoBehaviour, IPointerClickHandler
         mapClickEvent.Invoke(eventData);
     }
 
+    public class BuildStateConfig
+    {
+        public List<Building.Building> buildables;
+        public GameObject owner;
+        public Pathing.GameGrid gameGrid;
+    }
+
     private interface IBuildState
     {
         public IBuildState doAction();
@@ -156,11 +170,18 @@ public class GameManager : MonoBehaviour, IPointerClickHandler
 
     private class Entry : IBuildState
     {
+        private BuildStateConfig config;
+
+        public Entry(BuildStateConfig cfg)
+        {
+            config = cfg;
+        }
+
         public IBuildState doAction()
         {
             if (Input.GetKeyDown(KeyCode.B))
             {
-                return new BuilderState();
+                return new BuilderState(config);
             }
 
             return this;
@@ -169,32 +190,71 @@ public class GameManager : MonoBehaviour, IPointerClickHandler
 
     private class BuilderState : IBuildState
     {
+        private BuildStateConfig config;
+
+        public BuilderState(BuildStateConfig cfg)
+        {
+            config = cfg;
+        }
+
         public IBuildState doAction()
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                return new Entry();
+                return new Entry(config);
             }
 
-            if (Input.GetKeyDown(KeyCode.F))
-            {
-                return new BuildFarm();
+            foreach (Building.Building building in config.buildables) {
+                if (Input.GetKeyDown(building.shortcut))
+                {
+                    return new BuildState(config, building.Spawn(config.owner));
+                }
             }
 
             return this;
         }
     }
 
-    private class BuildFarm : IBuildState
+    private class BuildState : IBuildState
     {
+        private BuildStateConfig config;
+        private Building.Building building;
+
+        public BuildState(BuildStateConfig cfg, Building.Building building)
+        {
+            config = cfg;
+            this.building = building;
+        }
+
         public IBuildState doAction()
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
+            var mouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            var pos = config.gameGrid.GetNodeFromWorldPosition(mouse).worldPosition;
+            pos.z = Camera.main.nearClipPlane;
+            building.transform.position = pos;
+
+            if (Input.GetKeyDown(KeyCode.Escape) || this.building.state == Building.Building.BuildingState.Building)
             {
-                return new BuilderState();
+                Debug.Log("Exiting Placing state");
+                return new BuilderState(config);
+            }
+
+            if (Input.GetMouseButtonDown(0))
+            {                
+                // todo: move player to location and any player movement cancels the build command
+                // but if player reaches location an and then construct is called, go ahead
+                // and allow player to move again
+                // The obsticle will have to be also removed if not constructed
+                building.Construct(pos);
+                building.onBuilt += AddObstacle;
             }
 
             return this;
+        }
+
+        public void AddObstacle(GameObject obj)
+        {
+            config.gameGrid.AddObstacle(obj);
         }
     }
 }

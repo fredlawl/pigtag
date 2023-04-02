@@ -72,6 +72,11 @@ namespace Pathing
             }
         }
 
+        public void AddObstacle(GameObject obj)
+        {
+            AddObstacle(GetNodeFromWorldPosition(obj.transform.position).gridPosition);
+        }
+
         public bool IsObstacle(Node node)
         {
             return obstacles.Contains(node);
@@ -79,9 +84,7 @@ namespace Pathing
 
         public void AddObstacle(Node n)
         {
-            
-                obstacles.Add(n);
-            //}
+            obstacles.Add(n);
         }
 
         public bool RemoveObstacle(Node n)
@@ -164,6 +167,14 @@ namespace Pathing
                 {
                     // sometimes the target can be half way into an obstruction, in this case
                     // we can still have a path to them.
+                    // TODO: A neighbor can be true for a diamond pattern where a path exists
+                    // to the center, so we need to add a collision where if the top left/right
+                    // and bottom left/right are blocked, we can't go to that spot
+                    // this could make for more interesting paths
+                    /*  O
+                     * O O
+                     *  O 
+                     */
                     if (IsObstacle(neighbor) && !neighbor.Equals(to))
                     {
                         continue;

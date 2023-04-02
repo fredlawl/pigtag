@@ -213,3 +213,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc9cf55b1d2957845ab6235a8a63d6d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  constructionTimeInSeconds: 2
+  state: 2
+  shortcut: 102
+  sr: {fileID: 0}
+  health: {fileID: 0}
