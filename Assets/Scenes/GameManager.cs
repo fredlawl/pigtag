@@ -241,11 +241,13 @@ public class GameManager : MonoBehaviour, IPointerClickHandler
 
             if (Input.GetMouseButtonDown(0))
             {                
-                // todo: move player to location and any player movement cancels the build command
+                // TODO: move player to location and any player movement cancels the build command
                 // but if player reaches location an and then construct is called, go ahead
                 // and allow player to move again
                 // The obsticle will have to be also removed if not constructed
                 building.Construct(pos);
+
+                // TODO: how many times is this added?
                 building.onBuilt += AddObstacle;
             }
 

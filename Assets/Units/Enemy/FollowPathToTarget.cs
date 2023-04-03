@@ -41,6 +41,10 @@ namespace Enemy
             }
 
             // Find a path if the player has moved
+            // TODO: A bug here is that we need to recalculate if an 
+            // obstacle is added AFTER enemy has started moving, but blocks path
+            // to player. How does this get notified when an obstacle is added?
+            // event binding?
             if (playerPosition != targetPosition.position)
             {
                 playerPosition = targetPosition.position;

@@ -175,6 +175,10 @@ namespace Pathing
                      * O O
                      *  O 
                      */
+                    // On second thought, maybe I don't want to add this
+                    // functionality in. There's enough of a gap in sprites
+                    // that make it look like anything can pass through 
+                    // that gap anyway
                     if (IsObstacle(neighbor) && !neighbor.Equals(to))
                     {
                         continue;

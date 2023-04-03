@@ -36,10 +36,12 @@ namespace Pathing
             foreach (Vector3 pos in positions)
             {
                 Node n = grid.Cell(pos);
-                if (n != null)
+                if (n == null)
                 {
-                    neighbors.Add(n);
+                    continue;
                 }
+
+                neighbors.Add(n);
             }
 
             return neighbors;
