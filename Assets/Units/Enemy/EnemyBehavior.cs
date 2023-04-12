@@ -58,6 +58,7 @@ namespace Enemy
              * For w/e reason, this is given the value
              * passed in via the UI instead of from the 
              * .Invoke() :thinkingface:
+             * UPDATE: this may be fixed, but it's currently untested
              */
             Debug.Log($"{gameObject.name} damaged for {amount}!");
         }

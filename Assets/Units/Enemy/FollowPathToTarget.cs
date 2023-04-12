@@ -1,4 +1,5 @@
 ﻿using BehaviorTree;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -30,6 +31,20 @@ namespace Enemy
             nextPosition = startPosition;
             animator = transform.gameObject.GetComponent<Animator>();
             sr = transform.gameObject.GetComponent<SpriteRenderer>();
+            pathfinder.obstacleAddedEvent += RecalculatePath;
+        }
+
+        public void RecalculatePath(object sender, EventArgs args)
+        {
+            Transform targetPosition = (Transform)GetData("target");
+            if (targetPosition == null)
+            {
+                return;
+            }
+
+            // Todo: Race here? it works OK
+            playerPosition = targetPosition.position;
+            foundPath = pathfinder.FindPath(transform.position, playerPosition);
         }
 
         public override BehaviorTree.Node.State Evaluate()
@@ -40,11 +55,6 @@ namespace Enemy
                 return State.Failure;
             }
 
-            // Find a path if the player has moved
-            // TODO: A bug here is that we need to recalculate if an 
-            // obstacle is added AFTER enemy has started moving, but blocks path
-            // to player. How does this get notified when an obstacle is added?
-            // event binding?
             if (playerPosition != targetPosition.position)
             {
                 playerPosition = targetPosition.position;

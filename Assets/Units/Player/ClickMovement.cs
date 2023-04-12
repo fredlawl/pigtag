@@ -58,6 +58,12 @@ namespace Player
             if (PointerEventData.InputButton.Right == eventData.button)
             {
                 newPosition = eventData.pointerCurrentRaycast.worldPosition;
+
+                /*
+                 * TODO: When selecting a area with an object, move to it, but 
+                 * don't move into it
+                 */
+
                 path = pathable.pathfinder.FindPath(transform.position, newPosition);
                 if (path.Count > 0)
                 {

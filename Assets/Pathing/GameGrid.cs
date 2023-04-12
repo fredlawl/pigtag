@@ -11,6 +11,9 @@ namespace Pathing
         private Tilemap tilemap;
         public Vector2Int size => new Vector2Int(tilemap.size.x, tilemap.size.y);
         private HashSet<Node> obstacles = new HashSet<Node>();
+
+        public event EventHandler obstacleAddedEvent;
+
         public bool hasObstacles => obstaclesCount > 0;
         public int obstaclesCount => obstacles.Count;
         public Vector3 cellSize => tilemap.cellSize;
@@ -69,6 +72,7 @@ namespace Pathing
             if (n != null)
             {
                 AddObstacle(n);
+                obstacleAddedEvent?.Invoke(this, null);
             }
         }
 

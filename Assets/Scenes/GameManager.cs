@@ -161,6 +161,7 @@ public class GameManager : MonoBehaviour, IPointerClickHandler
         public List<Building.Building> buildables;
         public GameObject owner;
         public Pathing.GameGrid gameGrid;
+        public UIManager uiManager;
     }
 
     private interface IBuildState
